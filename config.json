@@ -28,20 +28,30 @@
     "type": "Flutter",
     "sdk_version": ">=3.0.0 <4.0.0",
     "architecture": {
-      "state_management": ["Provider"],
-      "networking": ["Dio", "http"],
-      "authentication": ["JWT"],
-      "storage": ["flutter_secure_storage"],
-      "location": ["geolocator"],
-      "mapping": ["google_maps_flutter"],
-      "environment": ["flutter_dotenv"],
-      "ui_components": ["Material Design 3"]
+      "core_utilities": {
+        "http": ["http", "dio"],
+        "localization": ["intl"],
+        "state_management": ["Provider"],
+        "environment": ["flutter_dotenv"],
+        "secure_storage": ["flutter_secure_storage"]
+      },
+      "location_mapping": {
+        "geolocation": ["geolocator"],
+        "reverse_geocoding": ["geocoding"],
+        "mapping": ["flutter_map", "latlong2"]
+      },
+      "ui_components": {
+        "framework": "Material Design 3",
+        "loading_indicators": ["flutter_spinkit"],
+        "external_links": ["url_launcher"]
+      },
+      "authentication": ["JWT"]
     },
     "environment": {
       "files": [".env", ".env.development", ".env.production"],
       "required_variables": [
         "API_BASE_URL",
-        "GOOGLE_MAPS_API_KEY",
+        "MAP_TILE_URL",
         "APP_ENV"
       ]
     },
@@ -59,16 +69,17 @@
     "dependencies": {
       "main_file": "pubspec.yaml",
       "key_packages": [
-        {"name": "http", "purpose": "Networking"},
-        {"name": "provider", "purpose": "State management"},
-        {"name": "google_maps_flutter", "purpose": "Interactive maps"},
-        {"name": "geolocator", "purpose": "Location services"},
-        {"name": "flutter_local_notifications", "purpose": "Local notifications"},
-        {"name": "hive", "purpose": "Local database"},
+        {"name": "http", "purpose": "Basic networking"},
         {"name": "dio", "purpose": "Advanced HTTP client"},
-        {"name": "flutter_riverpod", "purpose": "State management"},
-        {"name": "intl", "purpose": "Internationalization"},
-        {"name": "flutter_secure_storage", "purpose": "Secure storage"}
+        {"name": "provider", "purpose": "State management"},
+        {"name": "flutter_map", "purpose": "Interactive maps using Leaflet"},
+        {"name": "geolocator", "purpose": "Location services"},
+        {"name": "geocoding", "purpose": "Reverse geocoding"},
+        {"name": "latlong2", "purpose": "Geographic coordinates"},
+        {"name": "flutter_secure_storage", "purpose": "Secure storage"},
+        {"name": "flutter_spinkit", "purpose": "Loading indicators"},
+        {"name": "url_launcher", "purpose": "Handling external URLs"},
+        {"name": "intl", "purpose": "Internationalization"}
       ]
     },
     "development": {
