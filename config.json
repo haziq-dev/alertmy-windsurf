@@ -1,0 +1,176 @@
+{
+  "project": {
+    "name": "AlertMy",
+    "description": "A comprehensive alert notification system with geospatial capabilities",
+    "version": "1.0.0",
+    "last_updated": "2025-11-01",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/yourusername/alert-my"
+    },
+    "license": "MIT"
+  },
+  "frontend": {
+    "name": "AlertMy Frontend",
+    "path": "alertmy_fe",
+    "type": "Flutter",
+    "sdk_version": ">=3.0.0 <4.0.0",
+    "dependencies": {
+      "main_file": "pubspec.yaml",
+      "key_packages": [
+        "http",
+        "provider",
+        "google_maps_flutter",
+        "location",
+        "flutter_local_notifications"
+      ]
+    },
+    "development": {
+      "port": 3000,
+      "build_command": "flutter build web --release --web-renderer html",
+      "start_command": "flutter run -d chrome --web-port=3000 --web-hostname=0.0.0.0",
+      "test_command": "flutter test",
+      "coverage_command": "flutter test --coverage"
+    },
+    "environment_variables": {
+      "required": [
+        "API_BASE_URL",
+        "GOOGLE_MAPS_API_KEY"
+      ]
+    }
+  },
+  "backend": {
+    "name": "AlertMy API",
+    "path": "alertmy-be",
+    "type": "Laravel",
+    "php_version": "^8.1",
+    "composer_file": "composer.json",
+    "environment": {
+      "env_file": ".env",
+      "example_file": ".env.example"
+    },
+    "server": {
+      "port": 8000,
+      "host": "0.0.0.0",
+      "url": "http://localhost:8000",
+      "api_prefix": "api",
+      "serve_command": "php artisan serve --host=0.0.0.0 --port=8000"
+    },
+    "key_commands": {
+      "key_generate": "php artisan key:generate",
+      "migrate": "php artisan migrate",
+      "seed": "php artisan db:seed",
+      "test": "php artisan test",
+      "tinker": "php artisan tinker"
+    },
+    "storage": {
+      "link_command": "php artisan storage:link",
+      "public_path": "storage/app/public"
+    }
+  },
+  "database": {
+    "type": "PostgreSQL with PostGIS",
+    "version": "14+ (PostgreSQL), 3.0+ (PostGIS)",
+    "config": {
+      "default_connection": "pgsql",
+      "connections": {
+        "pgsql": {
+          "driver": "pgsql",
+          "host": "localhost",
+          "port": 5432,
+          "database": "alertmy",
+          "username": "postgres",
+          "password": "",
+          "charset": "utf8",
+          "prefix": "",
+          "schema": "public"
+        }
+      },
+      "migrations": {
+        "path": "database/migrations",
+        "command": "php artisan migrate"
+      },
+      "postgis": {
+        "extension_required": true,
+        "spatial_functions_enabled": true,
+        "types": [
+          "GEOMETRY",
+          "GEOGRAPHY",
+          "POINT",
+          "POLYGON",
+          "MULTIPOLYGON"
+        ]
+      }
+    }
+  },
+  "development": {
+    "ide": "VS Code",
+    "recommended_extensions": [
+      "Dart-Code.dart-code",
+      "Dart-Code.flutter",
+      "bmewburn.vscode-intelephense-client",
+      "mikestead.dotenv",
+      "onecentlin.laravel-blade",
+      "amiralizadeh9480.laravel-extra-intellisense"
+    ],
+    "package_manager": {
+      "frontend": {
+        "manager": "pub",
+        "lock_file": "pubspec.lock",
+        "install_command": "flutter pub get"
+      },
+      "backend": {
+        "manager": "composer",
+        "lock_file": "composer.lock",
+        "install_command": "composer install --optimize-autoloader --no-dev"
+      }
+    },
+    "testing": {
+      "frontend": {
+        "framework": "Flutter Test",
+        "coverage_command": "flutter test --coverage",
+        "test_dir": "test/"
+      },
+      "backend": {
+        "framework": "PHPUnit",
+        "config_file": "phpunit.xml",
+        "test_dir": "tests/"
+      },
+      "api": {
+        "documentation": "Postman/Swagger",
+        "test_runner": "Postman/Newman"
+      }
+    },
+    "debugging": {
+      "xdebug": {
+        "port": 9003,
+        "idekey": "VSCODE"
+      },
+      "flutter": {
+        "observatory_port": 3001,
+        "devtools_port": 9100
+      }
+    }
+  },
+  "deployment": {
+    "frontend": {
+      "build_output": "build/web",
+      "web_server": "Nginx/Apache"
+    },
+    "backend": {
+      "server_requirements": [
+        "PHP 8.1+",
+        "PostgreSQL 14+ with PostGIS 3.0+",
+        "Composer",
+        "Node.js 16+ (for asset compilation)"
+      ],
+      "deployment_steps": [
+        "Run composer install --optimize-autoloader --no-dev",
+        "Run php artisan config:cache",
+        "Run php artisan route:cache",
+        "Run php artisan view:cache",
+        "Set up queue workers if using queues"
+      ]
+    }
+  }
+}
