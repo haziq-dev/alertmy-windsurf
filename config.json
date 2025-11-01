@@ -28,12 +28,33 @@
     "type": "Flutter",
     "sdk_version": ">=3.0.0 <4.0.0",
     "architecture": {
-      "state_management": ["Provider", "Riverpod"],
-      "navigation": "GoRouter",
-      "local_storage": ["Hive", "Shared Preferences"],
+      "state_management": ["Provider"],
       "networking": ["Dio", "http"],
-      "mapping": ["google_maps_flutter", "geolocator", "flutter_map"],
-      "notifications": ["firebase_messaging", "flutter_local_notifications"]
+      "authentication": ["JWT"],
+      "storage": ["flutter_secure_storage"],
+      "location": ["geolocator"],
+      "mapping": ["google_maps_flutter"],
+      "environment": ["flutter_dotenv"],
+      "ui_components": ["Material Design 3"]
+    },
+    "environment": {
+      "files": [".env", ".env.development", ".env.production"],
+      "required_variables": [
+        "API_BASE_URL",
+        "GOOGLE_MAPS_API_KEY",
+        "APP_ENV"
+      ]
+    },
+    "project_structure": {
+      "lib/": [
+        "config/",
+        "models/",
+        "providers/",
+        "screens/",
+        "services/",
+        "utils/",
+        "widgets/"
+      ]
     },
     "dependencies": {
       "main_file": "pubspec.yaml",
