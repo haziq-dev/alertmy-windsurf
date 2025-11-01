@@ -1,15 +1,294 @@
-# Project Roadmap — AlertMY (Flutter + Laravel + PostgreSQL + Filament)
+# AlertMY Project Roadmap
 
-## Overview
-AlertMY is a crowdsourced alert application that allows Malaysian users to report and view real-time incidents such as floods, accidents, roadblocks, and blackouts. The system will use:
+## Project Overview
+AlertMY is a comprehensive alert notification system with geospatial capabilities, enabling users to report and receive real-time alerts about various incidents. The system is built with a modern, scalable architecture.
 
-- **Frontend:** Flutter (Android focus)
-- **Backend:** Laravel 11 (API-first)
-- **Database:** PostgreSQL with PostGIS (for geospatial queries)
-- **Admin CMS:** Filament (Laravel-based admin panel)
-- **Local Development:** WSL2 (Ubuntu) serving PostgreSQL
+## Technical Stack
 
-This document describes each step required to complete the project — from setup to deployment — with detailed explanations, but no code.
+### Frontend (alertmy_fe)
+- **Framework**: Flutter 3.0+ (Cross-platform: Web, iOS, Android)
+- **State Management**: Provider/Riverpod
+- **Maps & Location**: Google Maps Flutter, Geolocator
+- **Local Storage**: Hive, Shared Preferences
+- **Networking**: Dio, http
+- **Authentication**: JWT with refresh tokens
+- **Push Notifications**: Firebase Cloud Messaging (FCM)
+
+### Backend (alertmy-be)
+- **Framework**: Laravel 10.x
+- **API**: RESTful with JSON:API specification
+- **Authentication**: Laravel Sanctum
+- **Database**: PostgreSQL 14+ with PostGIS 3.0+
+- **Caching & Queues**: Redis
+- **Search**: Laravel Scout with Meilisearch
+- **Storage**: Local/S3-compatible storage
+- **Admin Panel**: Filament PHP
+- **Documentation**: Scribe
+
+### Infrastructure
+- **Version Control**: GitHub
+- **CI/CD**: GitHub Actions
+- **Containerization**: Docker
+- **Hosting**: VPS (e.g., DigitalOcean, AWS, GCP)
+- **Monitoring**: Laravel Telescope, Sentry
+
+## Project Structure
+
+### Frontend (alertmy_fe)
+```
+lib/
+├── core/               # Core functionality
+│   ├── constants/     
+│   ├── errors/        
+│   ├── services/      
+│   └── utils/         
+├── features/          # Feature-based modules
+│   ├── auth/         
+│   ├── alerts/       
+│   ├── profile/      
+│   └── ...
+├── shared/            # Shared widgets and utilities
+│   ├── widgets/      
+│   ├── theme/        
+│   └── localization/ 
+└── main.dart         # Application entry point
+```
+
+### Backend (alertmy-be)
+```
+app/
+├── Console/          # Artisan commands
+├── Http/            
+│   ├── Controllers/  # API Controllers
+│   ├── Middleware/   
+│   └── Requests/     # Form Requests
+├── Models/           # Eloquent Models
+├── Policies/         # Authorization Policies
+└── Services/         # Business Logic
+
+database/
+├── factories/       # Model Factories
+├── migrations/      # Database Migrations
+├── seeders/         # Database Seeders
+└── spatial/         # PostGIS specific migrations
+
+routes/
+├── api.php         # API Routes
+└── web.php         # Web Routes
+```
+
+## Development Workflow
+
+### Version Control
+- **Branch Naming**: `feature/`, `bugfix/`, `hotfix/`, `release/`
+- **Commit Message Convention**: Conventional Commits
+- **Code Review**: Required for all PRs
+- **CI/CD**: Automated testing and deployment
+
+### Code Quality
+- **PHP**: PHP_CodeSniffer, PHPStan
+- **Dart**: Flutter Analyze, Dart Analysis
+- **Testing**: PHPUnit, Laravel Dusk, Flutter Test
+- **Coverage**: Minimum 80% test coverage
+
+## API Design
+
+### Authentication
+- JWT-based authentication
+- Refresh token mechanism
+- Rate limiting (throttling)
+- CORS configuration
+
+### Endpoints
+- RESTful design
+- Versioned API (e.g., `/api/v1/`)
+- JSON:API specification
+- Pagination, filtering, sorting
+- Caching headers
+
+## Database Design
+
+### Key Tables
+- `users` - User accounts and authentication
+- `alerts` - Alert notifications with geospatial data
+- `alert_types` - Categories of alerts
+- `confirmations` - User confirmations of alerts
+- `devices` - For push notifications
+- `notifications` - System notifications
+
+### PostGIS Integration
+- Spatial columns for location data
+- Geofencing capabilities
+- Distance calculations
+- Spatial indexing for performance
+
+## Security
+
+### Authentication & Authorization
+- JWT token-based authentication
+- Role-based access control (RBAC)
+- OAuth2 for third-party integrations
+- CSRF protection
+
+### Data Protection
+- Input validation and sanitization
+- SQL injection prevention
+- XSS protection
+- Rate limiting
+- API key authentication for public endpoints
+
+## Deployment Strategy
+
+### Environments
+1. **Development** - Local development
+2. **Staging** - Pre-production testing
+3. **Production** - Live environment
+
+### Infrastructure as Code
+- Docker Compose for local development
+- Terraform for infrastructure provisioning
+- Ansible for configuration management
+
+### CI/CD Pipeline
+1. Code push triggers build
+2. Run tests and code analysis
+3. Build artifacts
+4. Deploy to staging/production
+5. Run migrations
+6. Clear caches
+
+## Monitoring & Maintenance
+
+### Logging
+- Structured logging with context
+- Log rotation and retention
+- Centralized log management
+
+### Performance Monitoring
+- Application performance monitoring (APM)
+- Database query optimization
+- Cache hit/miss ratios
+
+### Alerting
+- Error tracking (Sentry)
+- Uptime monitoring
+- Performance alerts
+
+## Future Enhancements
+
+### Short-term
+- [ ] User profile management
+- [ ] Advanced alert filtering
+- [ ] Offline support
+- [ ] Push notifications
+
+### Medium-term
+- [ ] Real-time updates with WebSockets
+- [ ] AI-based alert verification
+- [ ] User reputation system
+- [ ] Multi-language support
+
+### Long-term
+- [ ] Machine learning for alert prediction
+- [ ] Integration with government APIs
+- [ ] Mobile wallet integration for rewards
+- [ ] IoT device integration
+
+## Success Metrics
+
+### Key Performance Indicators (KPIs)
+- System uptime (target: 99.9%)
+- API response time (p95 < 500ms)
+- User growth rate
+- Alert resolution time
+- User engagement metrics
+
+## Team & Responsibilities
+
+### Development Team
+- **Frontend Developers**: 2-3
+- **Backend Developers**: 2
+- **DevOps Engineer**: 1
+- **QA Engineer**: 1
+- **Product Manager**: 1
+
+### Communication
+- Daily stand-ups
+- Bi-weekly sprint planning
+- Weekly demos
+- Monthly retrospectives
+
+## Timeline
+
+### Phase 1: Foundation (Weeks 1-4)
+- Project setup and architecture
+- Core features development
+- Basic testing infrastructure
+
+### Phase 2: Core Features (Weeks 5-8)
+- User authentication
+- Alert creation and management
+- Basic admin panel
+
+### Phase 3: Enhanced Features (Weeks 9-12)
+- Real-time updates
+- Advanced search and filtering
+- Push notifications
+
+### Phase 4: Polish & Launch (Weeks 13-16)
+- Performance optimization
+- Security audit
+- Beta testing
+- Production deployment
+
+## Risk Management
+
+### Identified Risks
+1. **Technical Risks**
+   - Performance bottlenecks
+   - Third-party service dependencies
+   - Data consistency issues
+
+2. **Project Risks**
+   - Scope creep
+   - Resource constraints
+   - Timeline delays
+
+### Mitigation Strategies
+- Regular code reviews
+- Automated testing
+- Feature flags
+- Rollback procedures
+- Regular backups
+
+## Budget
+
+### Development Costs
+- Development team salaries
+- Infrastructure costs
+- Third-party services
+- Tools and licenses
+
+### Operational Costs
+- Hosting
+- Storage
+- Bandwidth
+- Support and maintenance
+
+## Legal & Compliance
+
+### Data Protection
+- GDPR compliance
+- Data retention policy
+- User data export/delete
+
+### Terms of Service
+- Acceptable use policy
+- Liability limitations
+- Intellectual property rights
+
+## Conclusion
+This roadmap provides a comprehensive guide for the development and maintenance of the AlertMY platform. It will be regularly updated to reflect changes in requirements, technology, or business priorities.
 
 ---
 

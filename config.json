@@ -1,28 +1,53 @@
 {
   "project": {
-    "name": "AlertMy",
-    "description": "A comprehensive alert notification system with geospatial capabilities",
+    "name": "AlertMY",
+    "description": "A crowdsourced alert application for reporting and viewing real-time incidents with geospatial capabilities",
     "version": "1.0.0",
     "last_updated": "2025-11-01",
     "repository": {
       "type": "git",
-      "url": "https://github.com/yourusername/alert-my"
+      "url": "https://github.com/haziq-dev/alertmy",
+      "frontend": "https://github.com/haziq-dev/alertmy_fe",
+      "backend": "https://github.com/haziq-dev/alertmy-be"
     },
-    "license": "MIT"
+    "license": "MIT",
+    "environments": {
+      "development": "Local development",
+      "staging": "Pre-production testing",
+      "production": "Live environment"
+    },
+    "key_metrics": {
+      "target_uptime": "99.9%",
+      "api_response_time": "p95 < 500ms",
+      "test_coverage": "80% minimum"
+    }
   },
   "frontend": {
     "name": "AlertMy Frontend",
     "path": "alertmy_fe",
     "type": "Flutter",
     "sdk_version": ">=3.0.0 <4.0.0",
+    "architecture": {
+      "state_management": ["Provider", "Riverpod"],
+      "navigation": "GoRouter",
+      "local_storage": ["Hive", "Shared Preferences"],
+      "networking": ["Dio", "http"],
+      "mapping": ["google_maps_flutter", "geolocator", "flutter_map"],
+      "notifications": ["firebase_messaging", "flutter_local_notifications"]
+    },
     "dependencies": {
       "main_file": "pubspec.yaml",
       "key_packages": [
-        "http",
-        "provider",
-        "google_maps_flutter",
-        "location",
-        "flutter_local_notifications"
+        {"name": "http", "purpose": "Networking"},
+        {"name": "provider", "purpose": "State management"},
+        {"name": "google_maps_flutter", "purpose": "Interactive maps"},
+        {"name": "geolocator", "purpose": "Location services"},
+        {"name": "flutter_local_notifications", "purpose": "Local notifications"},
+        {"name": "hive", "purpose": "Local database"},
+        {"name": "dio", "purpose": "Advanced HTTP client"},
+        {"name": "flutter_riverpod", "purpose": "State management"},
+        {"name": "intl", "purpose": "Internationalization"},
+        {"name": "flutter_secure_storage", "purpose": "Secure storage"}
       ]
     },
     "development": {
@@ -43,34 +68,81 @@
     "name": "AlertMy API",
     "path": "alertmy-be",
     "type": "Laravel",
+    "version": "10.x",
     "php_version": "^8.1",
     "composer_file": "composer.json",
+    "architecture": {
+      "api_spec": "RESTful with JSON:API",
+      "authentication": ["Laravel Sanctum", "JWT"],
+      "caching": ["Redis", "File"],
+      "search": ["Laravel Scout", "Meilisearch"],
+      "queues": ["Redis", "Database"],
+      "storage": ["Local", "S3"],
+      "real_time": ["Laravel Echo", "Pusher"]
+    },
     "environment": {
       "env_file": ".env",
-      "example_file": ".env.example"
+      "example_file": ".env.example",
+      "required_extensions": [
+        "php8.1-pgsql",
+        "php8.1-mbstring",
+        "php8.1-xml",
+        "php8.1-curl",
+        "php8.1-zip",
+        "php8.1-gd",
+        "php8.1-intl"
+      ]
     },
     "server": {
       "port": 8000,
       "host": "0.0.0.0",
       "url": "http://localhost:8000",
-      "api_prefix": "api",
-      "serve_command": "php artisan serve --host=0.0.0.0 --port=8000"
+      "api_prefix": "api/v1",
+      "serve_command": "php artisan serve --host=0.0.0.0 --port=8000",
+      "queue_worker": "php artisan queue:work --tries=3 --timeout=90"
     },
     "key_commands": {
       "key_generate": "php artisan key:generate",
+      "jwt_secret": "php artisan jwt:secret",
       "migrate": "php artisan migrate",
       "seed": "php artisan db:seed",
       "test": "php artisan test",
-      "tinker": "php artisan tinker"
+      "tinker": "php artisan tinker",
+      "optimize": "php artisan optimize",
+      "storage_link": "php artisan storage:link",
+      "horizon": "php artisan horizon",
+      "docs_generate": "php artisan scribe:generate"
     },
     "storage": {
       "link_command": "php artisan storage:link",
-      "public_path": "storage/app/public"
-    }
+      "public_path": "storage/app/public",
+      "private_path": "storage/app/private",
+      "temp_path": "storage/app/temp"
+    },
+    "cron_jobs": [
+      {
+        "schedule": "* * * * *",
+        "command": "php artisan schedule:run",
+        "description": "Run scheduled tasks"
+      },
+      {
+        "schedule": "0 0 * * *",
+        "command": "php artisan backup:run",
+        "description": "Daily database backup"
+      }
+    ]
   },
   "database": {
     "type": "PostgreSQL with PostGIS",
     "version": "14+ (PostgreSQL), 3.0+ (PostGIS)",
+    "features": {
+      "spatial_data": true,
+      "geographic_objects": true,
+      "spatial_indexing": true,
+      "geofencing": true,
+      "full_text_search": true,
+      "jsonb_support": true
+    },
     "config": {
       "default_connection": "pgsql",
       "connections": {
@@ -80,27 +152,68 @@
           "port": 5432,
           "database": "alertmy",
           "username": "postgres",
-          "password": "",
-          "charset": "utf8",
+          "password": "postgres",
+          "charset": "utf8mb4",
+          "collation": "utf8mb4_unicode_ci",
           "prefix": "",
-          "schema": "public"
+          "schema": "public",
+          "postgis_schema": "public",
+          "sslmode": "prefer"
+        },
+        "testing": {
+          "driver": "sqlite",
+          "database": ":memory:",
+          "prefix": "",
+          "foreign_key_constraints": true
         }
+      }
+    },
+    "spatial_data_types": ["POINT", "POLYGON", "MULTIPOLYGON"],
+    "tables": {
+      "alerts": {
+        "description": "Stores user-reported alerts with geolocation data",
+        "columns": [
+          "id (uuid)",
+          "user_id (foreign key)",
+          "category_id (foreign key)",
+          "title (string)",
+          "description (text)",
+          "location (geography(Point, 4326))",
+          "status (enum: pending, confirmed, resolved, rejected)",
+          "severity (enum: low, medium, high, critical)",
+          "photo_url (string, nullable)",
+          "created_at (timestamp)",
+          "updated_at (timestamp)"
+        ],
+        "indexes": [
+          "spatial_index_on_location",
+          "index_on_status",
+          "index_on_created_at"
+        ]
       },
-      "migrations": {
-        "path": "database/migrations",
-        "command": "php artisan migrate"
-      },
-      "postgis": {
-        "extension_required": true,
-        "spatial_functions_enabled": true,
-        "types": [
-          "GEOMETRY",
-          "GEOGRAPHY",
-          "POINT",
-          "POLYGON",
-          "MULTIPOLYGON"
+      "confirmations": {
+        "description": "Tracks user confirmations of alerts",
+        "columns": [
+          "id (uuid)",
+          "alert_id (foreign key)",
+          "user_id (foreign key)",
+          "status (enum: confirmed, rejected)",
+          "comment (text, nullable)",
+          "created_at (timestamp)",
+          "updated_at (timestamp)"
         ]
       }
+    },
+    "migrations": {
+      "path": "database/migrations",
+      "seeds_path": "database/seeders",
+      "postgis_extension": "CREATE EXTENSION IF NOT EXISTS postgis;"
+    },
+    "backup": {
+      "enabled": true,
+      "schedule": "daily",
+      "retention": 30,
+      "storage": "local|s3"
     }
   },
   "development": {
@@ -111,20 +224,15 @@
       "bmewburn.vscode-intelephense-client",
       "mikestead.dotenv",
       "onecentlin.laravel-blade",
-      "amiralizadeh9480.laravel-extra-intellisense"
+      "amiralizadeh9480.laravel-extra-intellisense",
+      "shufo.vscode-blade-formatter",
+      "mohamedbenhida.laravel-intellisense",
+      "streetsidesoftware.code-spell-checker",
+      "editorconfig.editorconfig",
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode"
     ],
-    "package_manager": {
-      "frontend": {
-        "manager": "pub",
-        "lock_file": "pubspec.lock",
-        "install_command": "flutter pub get"
-      },
-      "backend": {
-        "manager": "composer",
-        "lock_file": "composer.lock",
-        "install_command": "composer install --optimize-autoloader --no-dev"
-      }
-    },
+    "browser": "Chrome",
     "testing": {
       "frontend": {
         "framework": "Flutter Test",
