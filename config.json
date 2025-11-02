@@ -1,316 +1,181 @@
 {
   "project": {
-    "name": "AlertMY",
-    "description": "A crowdsourced alert application for reporting and viewing real-time incidents with geospatial capabilities",
+    "name": "AlertMy",
+    "description": "A real-time alert notification system with geospatial capabilities for reporting and viewing incidents",
     "version": "1.0.0",
-    "last_updated": "2025-11-01",
+    "last_updated": "2025-11-03",
     "repository": {
       "type": "git",
       "url": "https://github.com/haziq-dev/alertmy",
-      "frontend": "https://github.com/haziq-dev/alertmy_fe",
-      "backend": "https://github.com/haziq-dev/alertmy-be"
+      "frontend": "https://github.com/haziq-dev/AlertMy"
     },
     "license": "MIT",
     "environments": {
-      "development": "Local development",
-      "staging": "Pre-production testing",
-      "production": "Live environment"
+      "development": "Local development with hot-reload and Expo Go",
+      "staging": "Staging for testing with production-like settings",
+      "production": "Production environment with Supabase"
     },
     "key_metrics": {
       "target_uptime": "99.9%",
-      "api_response_time": "p95 < 500ms",
-      "test_coverage": "80% minimum"
+      "api_response_time": "p95 < 300ms",
+      "test_coverage": "85% minimum",
+      "concurrent_users": "1000+"
     }
   },
   "frontend": {
-    "name": "AlertMy Frontend",
-    "path": "alertmy_fe",
-    "type": "Flutter",
-    "sdk_version": ">=3.0.0 <4.0.0",
+    "name": "AlertMy Mobile App",
+    "path": "AlertMy",
+    "type": "React Native (Expo)",
+    "sdk_version": "49.0.0",
     "architecture": {
+      "data_layer": {
+        "database": ["@supabase/supabase-js"],
+        "realtime": ["@supabase/realtime-js"],
+        "auth": ["@supabase/supabase-js"]
+      },
       "core_utilities": {
-        "http": ["http", "dio"],
-        "localization": ["intl"],
-        "state_management": ["Provider"],
-        "environment": ["flutter_dotenv"],
-        "secure_storage": ["flutter_secure_storage"]
+        "http": ["axios"],
+        "state_management": ["React Context", "React Hooks"],
+        "environment": ["react-native-config"],
+        "storage": ["@react-native-async-storage/async-storage"]
       },
       "location_mapping": {
-        "geolocation": ["geolocator"],
-        "reverse_geocoding": ["geocoding"],
-        "mapping": ["flutter_map", "latlong2"]
+        "geolocation": ["expo-location"],
+        "mapping": ["react-native-maps"],
+        "spatial_queries": ["PostGIS via Supabase"]
       },
       "ui_components": {
-        "framework": "Material Design 3",
-        "loading_indicators": ["flutter_spinkit"],
-        "external_links": ["url_launcher"]
+        "framework": "React Native Paper",
+        "navigation": ["@react-navigation/native"],
+        "icons": ["@expo/vector-icons"]
       },
-      "authentication": ["JWT"]
+      "authentication": ["Supabase Auth", "JWT"]
     },
     "environment": {
-      "files": [".env", ".env.development", ".env.production"],
+      "files": [
+        ".env",
+        ".env.development",
+        ".env.production"
+      ],
       "required_variables": [
-        "API_BASE_URL",
-        "MAP_TILE_URL",
+        "EXPO_PUBLIC_SUPABASE_URL",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY",
+        "GOOGLE_MAPS_API_KEY",
         "APP_ENV"
       ]
     },
     "project_structure": {
-      "lib/": [
-        "config/",
-        "models/",
-        "providers/",
+      "app/": [
+        "components/",
+        "navigation/",
         "screens/",
         "services/",
-        "utils/",
-        "widgets/"
+        "hooks/",
+        "utils/"
+      ],
+      "key_files": [
+        "app.json",
+        "babel.config.js",
+        "tsconfig.json"
       ]
     },
     "dependencies": {
-      "main_file": "pubspec.yaml",
+      "main_file": "package.json",
       "key_packages": [
-        {"name": "http", "purpose": "Basic networking"},
-        {"name": "dio", "purpose": "Advanced HTTP client"},
-        {"name": "provider", "purpose": "State management"},
-        {"name": "flutter_map", "purpose": "Interactive maps using Leaflet"},
-        {"name": "geolocator", "purpose": "Location services"},
-        {"name": "geocoding", "purpose": "Reverse geocoding"},
-        {"name": "latlong2", "purpose": "Geographic coordinates"},
-        {"name": "flutter_secure_storage", "purpose": "Secure storage"},
-        {"name": "flutter_spinkit", "purpose": "Loading indicators"},
-        {"name": "url_launcher", "purpose": "Handling external URLs"},
-        {"name": "intl", "purpose": "Internationalization"}
+        {"name": "@supabase/supabase-js", "purpose": "Supabase client for React Native"},
+        {"name": "@react-navigation/native", "purpose": "Navigation between screens"},
+        {"name": "react-native-maps", "purpose": "Interactive maps for React Native"},
+        {"name": "expo-location", "purpose": "Access device location"},
+        {"name": "react-native-paper", "purpose": "Material Design components"},
+        {"name": "axios", "purpose": "HTTP client for API requests"},
+        {"name": "react-native-config", "purpose": "Environment variables management"}
       ]
     },
     "development": {
-      "port": 3000,
-      "build_command": "flutter build web --release --web-renderer html",
-      "start_command": "flutter run -d chrome --web-port=3000 --web-hostname=0.0.0.0",
-      "test_command": "flutter test",
-      "coverage_command": "flutter test --coverage"
-    },
-    "environment_variables": {
-      "required": [
-        "API_BASE_URL",
-        "GOOGLE_MAPS_API_KEY"
-      ]
+      "port": 19006,
+      "start_command": "npx expo start",
+      "build_command": "npx expo prebuild",
+      "test_command": "jest",
+      "coverage_command": "jest --coverage"
     }
   },
   "backend": {
-    "name": "AlertMy API",
-    "path": "alertmy-be",
-    "type": "Laravel",
-    "version": "10.x",
-    "php_version": "^8.1",
-    "composer_file": "composer.json",
-    "architecture": {
-      "api_spec": "RESTful with JSON:API",
-      "authentication": ["Laravel Sanctum", "JWT"],
-      "caching": ["Redis", "File"],
-      "search": ["Laravel Scout", "Meilisearch"],
-      "queues": ["Redis", "Database"],
-      "storage": ["Local", "S3"],
-      "real_time": ["Laravel Echo", "Pusher"]
-    },
-    "environment": {
-      "env_file": ".env",
-      "example_file": ".env.example",
-      "required_extensions": [
-        "php8.1-pgsql",
-        "php8.1-mbstring",
-        "php8.1-xml",
-        "php8.1-curl",
-        "php8.1-zip",
-        "php8.1-gd",
-        "php8.1-intl"
+    "name": "Supabase Backend",
+    "type": "Supabase",
+    "database": {
+      "type": "PostgreSQL",
+      "version": "14+",
+      "extensions": ["PostGIS", "pgcrypto", "uuid-ossp"],
+      "features": [
+        "Row Level Security",
+        "Realtime Subscriptions",
+        "Database Functions",
+        "Spatial Queries with PostGIS"
       ]
     },
-    "server": {
-      "port": 8000,
-      "host": "0.0.0.0",
-      "url": "http://localhost:8000",
-      "api_prefix": "api/v1",
-      "serve_command": "php artisan serve --host=0.0.0.0 --port=8000",
-      "queue_worker": "php artisan queue:work --tries=3 --timeout=90"
-    },
-    "key_commands": {
-      "key_generate": "php artisan key:generate",
-      "jwt_secret": "php artisan jwt:secret",
-      "migrate": "php artisan migrate",
-      "seed": "php artisan db:seed",
-      "test": "php artisan test",
-      "tinker": "php artisan tinker",
-      "optimize": "php artisan optimize",
-      "storage_link": "php artisan storage:link",
-      "horizon": "php artisan horizon",
-      "docs_generate": "php artisan scribe:generate"
+    "auth": {
+      "providers": [
+        "Email/Password",
+        "OAuth Providers (Google, Apple, etc.)",
+        "Magic Links"
+      ],
+      "security": [
+        "Row Level Security",
+        "JWT Verification",
+        "Rate Limiting"
+      ]
     },
     "storage": {
-      "link_command": "php artisan storage:link",
-      "public_path": "storage/app/public",
-      "private_path": "storage/app/private",
-      "temp_path": "storage/app/temp"
+      "type": "Supabase Storage",
+      "features": [
+        "File Uploads",
+        "Access Control",
+        "Image Transformations"
+      ]
     },
-    "cron_jobs": [
-      {
-        "schedule": "* * * * *",
-        "command": "php artisan schedule:run",
-        "description": "Run scheduled tasks"
-      },
-      {
-        "schedule": "0 0 * * *",
-        "command": "php artisan backup:run",
-        "description": "Daily database backup"
-      }
-    ]
-  },
-  "database": {
-    "type": "PostgreSQL with PostGIS",
-    "version": "14+ (PostgreSQL), 3.0+ (PostGIS)",
-    "features": {
-      "spatial_data": true,
-      "geographic_objects": true,
-      "spatial_indexing": true,
-      "geofencing": true,
-      "full_text_search": true,
-      "jsonb_support": true
-    },
-    "config": {
-      "default_connection": "pgsql",
-      "connections": {
-        "pgsql": {
-          "driver": "pgsql",
-          "host": "localhost",
-          "port": 5432,
-          "database": "alertmy",
-          "username": "postgres",
-          "password": "postgres",
-          "charset": "utf8mb4",
-          "collation": "utf8mb4_unicode_ci",
-          "prefix": "",
-          "schema": "public",
-          "postgis_schema": "public",
-          "sslmode": "prefer"
-        },
-        "testing": {
-          "driver": "sqlite",
-          "database": ":memory:",
-          "prefix": "",
-          "foreign_key_constraints": true
-        }
-      }
-    },
-    "spatial_data_types": ["POINT", "POLYGON", "MULTIPOLYGON"],
-    "tables": {
-      "alerts": {
-        "description": "Stores user-reported alerts with geolocation data",
-        "columns": [
-          "id (uuid)",
-          "user_id (foreign key)",
-          "category_id (foreign key)",
-          "title (string)",
-          "description (text)",
-          "location (geography(Point, 4326))",
-          "status (enum: pending, confirmed, resolved, rejected)",
-          "severity (enum: low, medium, high, critical)",
-          "photo_url (string, nullable)",
-          "created_at (timestamp)",
-          "updated_at (timestamp)"
-        ],
-        "indexes": [
-          "spatial_index_on_location",
-          "index_on_status",
-          "index_on_created_at"
-        ]
-      },
-      "confirmations": {
-        "description": "Tracks user confirmations of alerts",
-        "columns": [
-          "id (uuid)",
-          "alert_id (foreign key)",
-          "user_id (foreign key)",
-          "status (enum: confirmed, rejected)",
-          "comment (text, nullable)",
-          "created_at (timestamp)",
-          "updated_at (timestamp)"
-        ]
-      }
-    },
-    "migrations": {
-      "path": "database/migrations",
-      "seeds_path": "database/seeders",
-      "postgis_extension": "CREATE EXTENSION IF NOT EXISTS postgis;"
-    },
-    "backup": {
-      "enabled": true,
-      "schedule": "daily",
-      "retention": 30,
-      "storage": "local|s3"
+    "api": {
+      "type": "REST/Realtime",
+      "features": [
+        "Auto-generated API",
+        "Realtime Subscriptions",
+        "Custom Edge Functions"
+      ]
     }
   },
   "development": {
     "ide": "VS Code",
     "recommended_extensions": [
-      "Dart-Code.dart-code",
-      "Dart-Code.flutter",
-      "bmewburn.vscode-intelephense-client",
-      "mikestead.dotenv",
-      "onecentlin.laravel-blade",
-      "amiralizadeh9480.laravel-extra-intellisense",
-      "shufo.vscode-blade-formatter",
-      "mohamedbenhida.laravel-intellisense",
-      "streetsidesoftware.code-spell-checker",
-      "editorconfig.editorconfig",
+      "esbenp.prettier-vscode",
       "dbaeumer.vscode-eslint",
-      "esbenp.prettier-vscode"
+      "bradlc.vscode-tailwindcss",
+      "ms-vscode.vscode-typescript-next",
+      "expo.vscode-expo-tools"
     ],
-    "browser": "Chrome",
-    "testing": {
-      "frontend": {
-        "framework": "Flutter Test",
-        "coverage_command": "flutter test --coverage",
-        "test_dir": "test/"
-      },
-      "backend": {
-        "framework": "PHPUnit",
-        "config_file": "phpunit.xml",
-        "test_dir": "tests/"
-      },
-      "api": {
-        "documentation": "Postman/Swagger",
-        "test_runner": "Postman/Newman"
-      }
-    },
-    "debugging": {
-      "xdebug": {
-        "port": 9003,
-        "idekey": "VSCODE"
-      },
-      "flutter": {
-        "observatory_port": 3001,
-        "devtools_port": 9100
-      }
-    }
+    "tools": [
+      "Node.js 18+",
+      "npm 9+ or yarn 1.22+",
+      "Expo CLI",
+      "Git",
+      "Supabase CLI"
+    ]
   },
   "deployment": {
-    "frontend": {
-      "build_output": "build/web",
-      "web_server": "Nginx/Apache"
-    },
-    "backend": {
-      "server_requirements": [
-        "PHP 8.1+",
-        "PostgreSQL 14+ with PostGIS 3.0+",
-        "Composer",
-        "Node.js 16+ (for asset compilation)"
-      ],
-      "deployment_steps": [
-        "Run composer install --optimize-autoloader --no-dev",
-        "Run php artisan config:cache",
-        "Run php artisan route:cache",
-        "Run php artisan view:cache",
-        "Set up queue workers if using queues"
-      ]
-    }
+    "platforms": [
+      {
+        "name": "App Store Connect",
+        "type": "iOS",
+        "requirements": ["Apple Developer Account"]
+      },
+      {
+        "name": "Google Play Console",
+        "type": "Android",
+        "requirements": ["Google Play Developer Account"]
+      },
+      {
+        "name": "Expo Application Services",
+        "type": "Over-the-air updates",
+        "requirements": ["Expo account"]
+      }
+    ]
   }
 }
